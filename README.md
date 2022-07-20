@@ -57,3 +57,59 @@ A few examples of extras for this coding challenge:
 4. Running the application in a serverless environment
 
 This is not an exhaustive list of extra features that could be added to this code challenge. At the end of the day, this section is for you to demonstrate any skills you want to show that’s not captured in the core requirement.
+
+OPTIONAL EXTRA
+README.MD
+# Code challenge
+
+## Create a ubuntu server on AWS EC2
+
+Before doing anything we need a server that we can work on, follow these steps to spin up a new Ubuntu 18.04 server instance on AWS EC2.
+
+1. Sign into the AWS Management Console. If you don't have an account yet click the "Create a Free Account" button and follow the prompts.
+2. Go to the EC2 Service section.
+3. Click the "Launch Instance" button.
+4. Choose AMI - Check the "Free tier only" checkbox, enter "Ubuntu" in search box and press enter, then select the "Ubuntu Server 18.04" Amazon Machine Image (AMI).
+5. Choose Instance Type - Select the "t2.micro" (Free tier eligible) instance type and click "Configure Security Group" in the top menu.
+6. Configure Security Group - Add a new rule to allow HTTP traffic then click "Review and Launch".
+7. Review - Click Launch
+8. Select "Create a new key pair", enter a name for the key pair (e.g. "my-aws-key") and click "Download Key Pair" to download the private key, you will use this to connect to the server via Putty.
+9. Click "Launch Instances", then scroll to the bottom of the page and click "View Instances" to see details of the new Ubuntu EC2 instance that is launching.
+
+## Connect to EC2 via Putty
+
+1. Install Putty
+2. With the downloaded key ppk, find the EC2 public IP and login to the instance with username `ubuntu`.
+
+## Deployment
+
+1. Clone the repository in the instance.
+2. Install Nodejs with: `sudo apt-get install -y nodejs`.
+3. Install nginx with: `sudo apt-get install nginx`.
+
+### Run build
+
+1. After cloning, `cd devops-code-challenge/frontend` and run `npm install` & `npm urn build`.
+2. `cd backend` and `npm install`
+
+### Configure nginx
+
+1. Configure nginx for reverse proxy
+
+```bash
+    server {
+        listen 80 default_server;
+        server_name _;
+
+        root /home/ubuntu/devops-code-challenge/frontend/build;
+
+        # react app & front-end files
+        location / {
+            add_header Access-Control-Allow-Origin *;
+            try_files $uri /index.html;
+        }
+    }
+```
+
+Now, open the public IP address of the instance, and we can see that the frontend is served through nginx.
+
